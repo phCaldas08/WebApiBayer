@@ -13,6 +13,12 @@ namespace WebApiBayer.Controllers
     [RoutePrefix("api/bayer/curriculo")]
     public class CurriculoController : ApiController
     {
+
+        /// <summary>
+        /// Inserir curriculo
+        /// </summary>
+        /// <param name="jbody"></param>
+        /// <returns></returns>
         [Route("InserirCurriculo")]
         [HttpPost]
         public IHttpActionResult Post([FromBody] JObject jbody)
@@ -39,6 +45,11 @@ namespace WebApiBayer.Controllers
             }
         }
 
+        /// <summary>
+        /// Consulta curriculo do candidato.
+        /// </summary>
+        /// <param name="jbody"></param>
+        /// <returns></returns>
         [Route("ConsultarCurriculo")]
         [HttpGet]
         public IHttpActionResult GetConsultar([FromBody] JObject jbody)
@@ -50,14 +61,13 @@ namespace WebApiBayer.Controllers
                 var a = jbody.ToString();
 
                 string candidato_id = jbody["id_candidato"].ToString();
-                string processo_id = jbody["id_processo_seletivo"].ToString();
 
                 IMongoDatabase db = Classes.Mongo.GetDatabase("teste_bayer");
 
-                if (db.GetCollection<BsonDocument>("curriculo").CountDocuments(i => i["candidato"]["id_candidato"] == candidato_id && i["id_processo_seletivo"] == processo_id) > 0)
+                if (db.GetCollection<BsonDocument>("curriculo").CountDocuments(i => i["candidato"]["id_candidato"] == candidato_id) > 0)
                 {
                     BsonDocument bson = db.GetCollection<BsonDocument>("curriculo")
-                        .Find(i => i["candidato"]["id_candidato"] == candidato_id && i["id_processo_seletivo"] == processo_id)
+                        .Find(i => i["candidato"]["id_candidato"] == candidato_id)
                         .Project(Builders<BsonDocument>.Projection.Exclude("_id"))
                         .First();
 
@@ -74,7 +84,11 @@ namespace WebApiBayer.Controllers
             }
         }
 
-
+        /// <summary>
+        /// Valida campos do curriculo e verifica compatibilidade.
+        /// </summary>
+        /// <param name="jbody"></param>
+        /// <returns></returns>
         [Route("ValidarCurriculo")]
         [HttpGet]
         public IHttpActionResult GetValidar([FromBody] JObject jbody)
@@ -100,33 +114,6 @@ namespace WebApiBayer.Controllers
 
 
 
-        [Route("StatusResumido")]
-        [HttpGet]
-        public IHttpActionResult GetStatus([FromBody] JObject jbody)
-        {
-            try
-            {
-                if (!jbody.ContainsKey("token_cliente")) return BadRequest("Token não identificado!");
-
-                //Validar o token
-
-                string id_processo_seletivo = jbody["id_processo_seletivo"].ToString();
-
-                IMongoDatabase db = Classes.Mongo.GetDatabase("teste_bayer");
-
-                if (db.GetCollection<Models.StatusResumido>("processo_seletivo").CountDocuments(i => i.id_processo_seletivo == id_processo_seletivo) > 0)
-                {
-                    Models.StatusResumido status = db.GetCollection<Models.StatusResumido>("processo_seletivo").Find(i => i.id_processo_seletivo == id_processo_seletivo).First();
-                    return Json(status);
-                }
-                else
-                    return NotFound();
-            }
-            catch(Exception ex)
-            {
-                return InternalServerError(ex);
-            }
-        }
 
     }
 }
