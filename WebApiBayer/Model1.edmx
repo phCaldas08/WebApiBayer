@@ -1,0 +1,297 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="bayerModel.Store" Provider="MySql.Data.MySqlClient" ProviderManifestToken="8.0" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="inscricao">
+          <Key>
+            <PropertyRef Name="id_inscricao" />
+          </Key>
+          <Property Name="id_inscricao" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="id_usuario" Type="int" Nullable="false" />
+          <Property Name="id_vaga" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="recrutador">
+          <Key>
+            <PropertyRef Name="id_recrutador" />
+          </Key>
+          <Property Name="id_recrutador" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="nome" Type="varchar" MaxLength="45" Nullable="false" />
+          <Property Name="registro" Type="varchar" MaxLength="45" Nullable="false" />
+          <Property Name="email" Type="varchar" MaxLength="45" Nullable="false" />
+          <Property Name="tel" Type="varchar" MaxLength="45" Nullable="false" />
+          <Property Name="login" Type="varchar" MaxLength="45" Nullable="false" />
+          <Property Name="senha" Type="varchar" MaxLength="45" Nullable="false" />
+          <Property Name="sobrenome" Type="varchar" MaxLength="45" Nullable="false" />
+        </EntityType>
+        <EntityType Name="usuario">
+          <Key>
+            <PropertyRef Name="id_usuario" />
+          </Key>
+          <Property Name="id_usuario" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="login" Type="varchar" MaxLength="20" Nullable="false" />
+          <Property Name="senha" Type="varchar" MaxLength="45" Nullable="false" />
+          <Property Name="nome" Type="varchar" MaxLength="45" Nullable="false" />
+          <Property Name="sobrenome" Type="varchar" MaxLength="45" Nullable="false" />
+          <Property Name="cpf" Type="varchar" MaxLength="14" Nullable="false" />
+          <Property Name="email" Type="varchar" MaxLength="45" Nullable="false" />
+          <Property Name="tel" Type="varchar" MaxLength="45" Nullable="false" />
+        </EntityType>
+        <EntityType Name="vagas">
+          <Key>
+            <PropertyRef Name="id_vaga" />
+          </Key>
+          <Property Name="id_vaga" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="descricao" Type="varchar" MaxLength="45" Nullable="false" />
+          <Property Name="id_recrutador" Type="int" Nullable="false" />
+          <Property Name="duracao" Type="int" Nullable="false" />
+          <Property Name="data_criacao" Type="datetime" Precision="0" Nullable="false" />
+          <Property Name="porcentagem_filtro" Type="decimal" Precision="10" Scale="0" Nullable="false" />
+          <Property Name="porcentagem_min" Type="decimal" Precision="10" Scale="0" Nullable="false" />
+        </EntityType>
+        <Association Name="fk_inscricao_usuario">
+          <End Role="usuario" Type="Self.usuario" Multiplicity="1" />
+          <End Role="inscricao" Type="Self.inscricao" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="usuario">
+              <PropertyRef Name="id_usuario" />
+            </Principal>
+            <Dependent Role="inscricao">
+              <PropertyRef Name="id_usuario" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_inscricao_vaga">
+          <End Role="vagas" Type="Self.vagas" Multiplicity="1" />
+          <End Role="inscricao" Type="Self.inscricao" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="vagas">
+              <PropertyRef Name="id_vaga" />
+            </Principal>
+            <Dependent Role="inscricao">
+              <PropertyRef Name="id_vaga" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_vaga_recrutador">
+          <End Role="recrutador" Type="Self.recrutador" Multiplicity="1" />
+          <End Role="vagas" Type="Self.vagas" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="recrutador">
+              <PropertyRef Name="id_recrutador" />
+            </Principal>
+            <Dependent Role="vagas">
+              <PropertyRef Name="id_recrutador" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="bayerModelStoreContainer">
+          <EntitySet Name="inscricao" EntityType="Self.inscricao" Schema="bayer" store:Type="Tables" />
+          <EntitySet Name="recrutador" EntityType="Self.recrutador" Schema="bayer" store:Type="Tables" />
+          <EntitySet Name="usuario" EntityType="Self.usuario" Schema="bayer" store:Type="Tables" />
+          <EntitySet Name="vagas" EntityType="Self.vagas" Schema="bayer" store:Type="Tables" />
+          <AssociationSet Name="fk_inscricao_usuario" Association="Self.fk_inscricao_usuario">
+            <End Role="usuario" EntitySet="usuario" />
+            <End Role="inscricao" EntitySet="inscricao" />
+          </AssociationSet>
+          <AssociationSet Name="fk_inscricao_vaga" Association="Self.fk_inscricao_vaga">
+            <End Role="vagas" EntitySet="vagas" />
+            <End Role="inscricao" EntitySet="inscricao" />
+          </AssociationSet>
+          <AssociationSet Name="fk_vaga_recrutador" Association="Self.fk_vaga_recrutador">
+            <End Role="recrutador" EntitySet="recrutador" />
+            <End Role="vagas" EntitySet="vagas" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="bayerModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="inscricao">
+          <Key>
+            <PropertyRef Name="id_inscricao" />
+          </Key>
+          <Property Name="id_inscricao" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="id_usuario" Type="Int32" Nullable="false" />
+          <Property Name="id_vaga" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="usuario" Relationship="Self.fk_inscricao_usuario" FromRole="inscricao" ToRole="usuario" />
+          <NavigationProperty Name="vagas" Relationship="Self.fk_inscricao_vaga" FromRole="inscricao" ToRole="vagas" />
+        </EntityType>
+        <EntityType Name="recrutador">
+          <Key>
+            <PropertyRef Name="id_recrutador" />
+          </Key>
+          <Property Name="id_recrutador" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="nome" Type="String" MaxLength="45" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="registro" Type="String" MaxLength="45" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="email" Type="String" MaxLength="45" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="tel" Type="String" MaxLength="45" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="vagas" Relationship="Self.fk_vaga_recrutador" FromRole="recrutador" ToRole="vagas" />
+          <Property Name="login" Type="String" Nullable="false" MaxLength="45" FixedLength="false" Unicode="false" />
+          <Property Name="senha" Type="String" Nullable="false" MaxLength="45" FixedLength="false" Unicode="false" />
+          <Property Name="sobrenome" Type="String" Nullable="false" MaxLength="45" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="usuario">
+          <Key>
+            <PropertyRef Name="id_usuario" />
+          </Key>
+          <Property Name="id_usuario" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="login" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="senha" Type="String" MaxLength="45" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="inscricao" Relationship="Self.fk_inscricao_usuario" FromRole="usuario" ToRole="inscricao" />
+          <Property Name="nome" Type="String" Nullable="false" MaxLength="45" FixedLength="false" Unicode="false" />
+          <Property Name="sobrenome" Type="String" Nullable="false" MaxLength="45" FixedLength="false" Unicode="false" />
+          <Property Name="cpf" Type="String" Nullable="false" MaxLength="14" FixedLength="false" Unicode="false" />
+          <Property Name="email" Type="String" Nullable="false" MaxLength="45" FixedLength="false" Unicode="false" />
+          <Property Name="tel" Type="String" Nullable="false" MaxLength="45" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="vagas">
+          <Key>
+            <PropertyRef Name="id_vaga" />
+          </Key>
+          <Property Name="id_vaga" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="descricao" Type="String" MaxLength="45" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="id_recrutador" Type="Int32" Nullable="false" />
+          <Property Name="duracao" Type="Int32" Nullable="false" />
+          <Property Name="data_criacao" Type="DateTime" Nullable="false" />
+          <Property Name="porcentagem_filtro" Type="Decimal" Nullable="false" />
+          <Property Name="porcentagem_min" Type="Decimal" Nullable="false" />
+          <NavigationProperty Name="inscricao" Relationship="Self.fk_inscricao_vaga" FromRole="vagas" ToRole="inscricao" />
+          <NavigationProperty Name="recrutador" Relationship="Self.fk_vaga_recrutador" FromRole="vagas" ToRole="recrutador" />
+        </EntityType>
+        <Association Name="fk_inscricao_usuario">
+          <End Role="usuario" Type="Self.usuario" Multiplicity="1" />
+          <End Role="inscricao" Type="Self.inscricao" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="usuario">
+              <PropertyRef Name="id_usuario" />
+            </Principal>
+            <Dependent Role="inscricao">
+              <PropertyRef Name="id_usuario" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_inscricao_vaga">
+          <End Role="vagas" Type="Self.vagas" Multiplicity="1" />
+          <End Role="inscricao" Type="Self.inscricao" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="vagas">
+              <PropertyRef Name="id_vaga" />
+            </Principal>
+            <Dependent Role="inscricao">
+              <PropertyRef Name="id_vaga" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_vaga_recrutador">
+          <End Role="recrutador" Type="Self.recrutador" Multiplicity="1" />
+          <End Role="vagas" Type="Self.vagas" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="recrutador">
+              <PropertyRef Name="id_recrutador" />
+            </Principal>
+            <Dependent Role="vagas">
+              <PropertyRef Name="id_recrutador" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="bayerEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="inscricao" EntityType="Self.inscricao" />
+          <EntitySet Name="recrutador" EntityType="Self.recrutador" />
+          <EntitySet Name="usuario" EntityType="Self.usuario" />
+          <EntitySet Name="vagas" EntityType="Self.vagas" />
+          <AssociationSet Name="fk_inscricao_usuario" Association="Self.fk_inscricao_usuario">
+            <End Role="usuario" EntitySet="usuario" />
+            <End Role="inscricao" EntitySet="inscricao" />
+          </AssociationSet>
+          <AssociationSet Name="fk_inscricao_vaga" Association="Self.fk_inscricao_vaga">
+            <End Role="vagas" EntitySet="vagas" />
+            <End Role="inscricao" EntitySet="inscricao" />
+          </AssociationSet>
+          <AssociationSet Name="fk_vaga_recrutador" Association="Self.fk_vaga_recrutador">
+            <End Role="recrutador" EntitySet="recrutador" />
+            <End Role="vagas" EntitySet="vagas" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="bayerModelStoreContainer" CdmEntityContainer="bayerEntities">
+          <EntitySetMapping Name="inscricao">
+            <EntityTypeMapping TypeName="bayerModel.inscricao">
+              <MappingFragment StoreEntitySet="inscricao">
+                <ScalarProperty Name="id_inscricao" ColumnName="id_inscricao" />
+                <ScalarProperty Name="id_usuario" ColumnName="id_usuario" />
+                <ScalarProperty Name="id_vaga" ColumnName="id_vaga" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="recrutador">
+            <EntityTypeMapping TypeName="bayerModel.recrutador">
+              <MappingFragment StoreEntitySet="recrutador">
+                <ScalarProperty Name="sobrenome" ColumnName="sobrenome" />
+                <ScalarProperty Name="senha" ColumnName="senha" />
+                <ScalarProperty Name="login" ColumnName="login" />
+                <ScalarProperty Name="id_recrutador" ColumnName="id_recrutador" />
+                <ScalarProperty Name="nome" ColumnName="nome" />
+                <ScalarProperty Name="registro" ColumnName="registro" />
+                <ScalarProperty Name="email" ColumnName="email" />
+                <ScalarProperty Name="tel" ColumnName="tel" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="usuario">
+            <EntityTypeMapping TypeName="bayerModel.usuario">
+              <MappingFragment StoreEntitySet="usuario">
+                <ScalarProperty Name="tel" ColumnName="tel" />
+                <ScalarProperty Name="email" ColumnName="email" />
+                <ScalarProperty Name="cpf" ColumnName="cpf" />
+                <ScalarProperty Name="sobrenome" ColumnName="sobrenome" />
+                <ScalarProperty Name="nome" ColumnName="nome" />
+                <ScalarProperty Name="id_usuario" ColumnName="id_usuario" />
+                <ScalarProperty Name="login" ColumnName="login" />
+                <ScalarProperty Name="senha" ColumnName="senha" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="vagas">
+            <EntityTypeMapping TypeName="bayerModel.vagas">
+              <MappingFragment StoreEntitySet="vagas">
+                <ScalarProperty Name="id_vaga" ColumnName="id_vaga" />
+                <ScalarProperty Name="descricao" ColumnName="descricao" />
+                <ScalarProperty Name="id_recrutador" ColumnName="id_recrutador" />
+                <ScalarProperty Name="duracao" ColumnName="duracao" />
+                <ScalarProperty Name="data_criacao" ColumnName="data_criacao" />
+                <ScalarProperty Name="porcentagem_filtro" ColumnName="porcentagem_filtro" />
+                <ScalarProperty Name="porcentagem_min" ColumnName="porcentagem_min" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="false" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

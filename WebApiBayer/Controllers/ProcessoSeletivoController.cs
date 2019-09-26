@@ -1,4 +1,5 @@
-﻿using MongoDB.Driver;
+﻿using MongoDB.Bson;
+using MongoDB.Driver;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
@@ -6,14 +7,13 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
+using WebApiBayer.Classes.Uteis;
 
 namespace WebApiBayer.Controllers
 {
     [RoutePrefix("api/bayer/processoseletivo")]
     public class ProcessoSeletivoController : ApiController
     {
-
-
 
         /// <summary>
         /// Cadastra novo processo seletivo.
@@ -26,13 +26,22 @@ namespace WebApiBayer.Controllers
         {
             try
             {
+                if (Token.ValidarToken(jbody["token_cliente"].ToString()))
+                {
+                    
 
+                    return Ok();
+                }
 
-                return Ok();
+                return Unauthorized();
+            }
+            catch(BayerException bex)
+            {
+                return InternalServerError(bex);
             }
             catch(Exception ex)
             {
-                return InternalServerError(ex);
+                return InternalServerError(new Exception("Erro ao cadastrar novo processo seletivo."));
             }            
         }
 
@@ -47,13 +56,22 @@ namespace WebApiBayer.Controllers
         {
             try
             {
+                if (Token.ValidarToken(jbody["token_cliente"].ToString()))
+                {
 
 
-                return Ok();
+                    return Ok();
+                }
+
+                return Unauthorized();
+            }
+            catch (BayerException bex)
+            {
+                return InternalServerError(bex);
             }
             catch (Exception ex)
             {
-                return InternalServerError(ex);
+                return InternalServerError(new Exception("Erro ao inscrever curriculo para o processo."));
             }
         }
 
@@ -69,9 +87,20 @@ namespace WebApiBayer.Controllers
         {
             try
             {
-                return Json("");
+                if (!jbody.ContainsKey("token_cliente")) return BadRequest("Token não identificado!");
+
+                if (Classes.Uteis.Token.ValidarToken(jbody["token_cliente"].ToString()))
+                {
+                    IMongoDatabase db = Classes.Mongo.GetDatabase("teste_bayer");
+                }
+
+                return Unauthorized();
             }
-            catch(Exception ex)
+            catch (Classes.Uteis.BayerException bex)
+            {
+                return InternalServerError(bex);
+            }
+            catch (Exception ex)
             {
                 return InternalServerError(ex);
             }
@@ -91,23 +120,31 @@ namespace WebApiBayer.Controllers
             {
                 if (!jbody.ContainsKey("token_cliente")) return BadRequest("Token não identificado!");
 
-                //Validar o token
-
-                string id_processo_seletivo = jbody["id_processo_seletivo"].ToString();
-
-                IMongoDatabase db = Classes.Mongo.GetDatabase("teste_bayer");
-
-                if (db.GetCollection<Models.StatusResumido>("processo_seletivo").CountDocuments(i => i.id_processo_seletivo == id_processo_seletivo) > 0)
+                if (Classes.Uteis.Token.ValidarToken(jbody["token_cliente"].ToString()))
                 {
-                    Models.StatusResumido status = db.GetCollection<Models.StatusResumido>("processo_seletivo").Find(i => i.id_processo_seletivo == id_processo_seletivo).First();
-                    return Json(status);
+                    string id_processo_seletivo = jbody["id_processo_seletivo"].ToString();
+
+                    IMongoDatabase db = Classes.Mongo.GetDatabase("teste_bayer");
+
+                    if (db.GetCollection<Models.StatusResumido>("processo_seletivo").CountDocuments(i => i.id_processo_seletivo == id_processo_seletivo) > 0)
+                    {
+                        Models.StatusResumido status = db.GetCollection<Models.StatusResumido>("processo_seletivo").Find(i => i.id_processo_seletivo == id_processo_seletivo).First();
+                        
+                        return Json(status);
+                    }
+                    else
+                        return NotFound();
                 }
-                else
-                    return NotFound();
+
+                return Unauthorized();
+            }
+            catch(Classes.Uteis.BayerException bex)
+            {
+                return InternalServerError(bex);
             }
             catch (Exception ex)
             {
-                return InternalServerError(ex);
+                return InternalServerError(new Exception("Erro ao consultar status."));
             }
         }
     }  
