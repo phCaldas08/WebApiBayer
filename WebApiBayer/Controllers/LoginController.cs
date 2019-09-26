@@ -10,7 +10,7 @@ using System.Web.Http;
 namespace WebApiBayer.Controllers
 {
 
-    [RoutePrefix("api/login")]
+    [RoutePrefix("api/bayer/login")]
     public class LoginController : ApiController
     {
         [Route("login")]
@@ -25,12 +25,14 @@ namespace WebApiBayer.Controllers
                     {
                         Models.LoginModel usuario = JsonConvert.DeserializeObject<Models.LoginModel>(jbody["usuario"].ToString());
 
+                        usuario.Senha = Classes.Uteis.Criptografia.Criptografar(usuario.Senha);
+
                         if (db.usuario.Any(i => i.login == usuario.Login && i.senha == usuario.Senha))
                             return Ok("candidato");
                         else if (db.recrutador.Any(i => i.login == usuario.Login && i.senha == usuario.Senha))
                             return Ok("recrutador");
                         else
-                            return NotFound();
+                            return Unauthorized();
                     }
                 }
                 else
@@ -61,7 +63,7 @@ namespace WebApiBayer.Controllers
                         else
                         {
                             db.usuario.Add(new usuario() { login = usuario.Login,
-                                senha = usuario.Senha,
+                                senha = Classes.Uteis.Criptografia.Criptografar(usuario.Senha),
                                 email = usuario.Email,
                                 sobrenome = usuario.SobreNome,
                                 nome = usuario.Nome,
@@ -88,7 +90,7 @@ namespace WebApiBayer.Controllers
                         else
                         {
                             db.recrutador.Add(new recrutador() { login = recrutador.Login,
-                                senha = recrutador.Senha,
+                                senha = Classes.Uteis.Criptografia.Criptografar(recrutador.Senha),
                                 nome = recrutador.Nome,
                                 sobrenome = recrutador.SobreNome,
                                 email = recrutador.Email,

@@ -12,7 +12,7 @@ namespace WebApiBayer.Classes.Uteis
         { 0x50, 0x08, 0xF1, 0xDD, 0xDE, 0x3C, 0xF2, 0x18,
         0x44, 0x74, 0x19, 0x2C, 0x53, 0x49, 0xAB, 0xBC };
 
-        private static readonly string cryptoKey = "SE_E_BAYER_E_BOM";
+        private static readonly string cryptoKey = "SEEBAYEREBOM";
 
         public static string Criptografar(string text)
         {

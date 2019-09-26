@@ -26,12 +26,8 @@ namespace WebApiBayer.Controllers
         {
             try
             {
-                if (Token.ValidarToken(jbody["token_cliente"].ToString()))
-                {
-                    
 
-                    return Ok();
-                }
+                return Ok();
 
                 return Unauthorized();
             }
@@ -56,12 +52,8 @@ namespace WebApiBayer.Controllers
         {
             try
             {
-                if (Token.ValidarToken(jbody["token_cliente"].ToString()))
-                {
 
-
-                    return Ok();
-                }
+                return Ok();
 
                 return Unauthorized();
             }
@@ -87,12 +79,7 @@ namespace WebApiBayer.Controllers
         {
             try
             {
-                if (!jbody.ContainsKey("token_cliente")) return BadRequest("Token não identificado!");
-
-                if (Classes.Uteis.Token.ValidarToken(jbody["token_cliente"].ToString()))
-                {
-                    IMongoDatabase db = Classes.Mongo.GetDatabase("teste_bayer");
-                }
+               IMongoDatabase db = Classes.Mongo.GetDatabase("teste_bayer");                
 
                 return Unauthorized();
             }
@@ -118,23 +105,19 @@ namespace WebApiBayer.Controllers
         {
             try
             {
-                if (!jbody.ContainsKey("token_cliente")) return BadRequest("Token não identificado!");
+                string id_processo_seletivo = jbody["id_processo_seletivo"].ToString();
 
-                if (Classes.Uteis.Token.ValidarToken(jbody["token_cliente"].ToString()))
+                IMongoDatabase db = Classes.Mongo.GetDatabase("teste_bayer");
+
+                if (db.GetCollection<Models.StatusResumido>("processo_seletivo").CountDocuments(i => i.id_processo_seletivo == id_processo_seletivo) > 0)
                 {
-                    string id_processo_seletivo = jbody["id_processo_seletivo"].ToString();
-
-                    IMongoDatabase db = Classes.Mongo.GetDatabase("teste_bayer");
-
-                    if (db.GetCollection<Models.StatusResumido>("processo_seletivo").CountDocuments(i => i.id_processo_seletivo == id_processo_seletivo) > 0)
-                    {
-                        Models.StatusResumido status = db.GetCollection<Models.StatusResumido>("processo_seletivo").Find(i => i.id_processo_seletivo == id_processo_seletivo).First();
+                    Models.StatusResumido status = db.GetCollection<Models.StatusResumido>("processo_seletivo").Find(i => i.id_processo_seletivo == id_processo_seletivo).First();
                         
-                        return Json(status);
-                    }
-                    else
-                        return NotFound();
+                    return Json(status);
                 }
+                else
+                    return NotFound();
+                
 
                 return Unauthorized();
             }

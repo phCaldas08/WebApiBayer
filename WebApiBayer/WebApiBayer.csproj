@@ -215,7 +215,6 @@
     <Compile Include="Classes\Mongo.cs" />
     <Compile Include="Classes\Uteis\BayerException.cs" />
     <Compile Include="Classes\Uteis\Criptografia.cs" />
-    <Compile Include="Classes\Uteis\Token.cs" />
     <Compile Include="Controllers\CurriculoController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\LoginController.cs" />
@@ -250,7 +249,6 @@
     <Compile Include="recrutador.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
-    <Compile Include="Startup.cs" />
     <Compile Include="usuario.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
