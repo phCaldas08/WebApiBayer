@@ -6,19 +6,23 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
+using System.Web.Http.Cors;
 
 namespace WebApiBayer.Controllers
 {
-
     [RoutePrefix("api/bayer/login")]
     public class LoginController : ApiController
     {
+        
+
         [Route("login")]
-        [HttpGet]
-        public IHttpActionResult GetLogar([FromBody] JObject jbody)
+        [HttpPost]
+        public IHttpActionResult PostLogar([FromBody] JObject jbody)
         {
             try
             {
+
+                
                 if (jbody.ContainsKey("usuario")) {
 
                     using (bayerEntities db = new bayerEntities())
@@ -50,11 +54,11 @@ namespace WebApiBayer.Controllers
         public IHttpActionResult PostCadastrar([FromBody] JObject jbody) {
             try
             {
-                if (jbody.ContainsKey("usuario"))
+                if (jbody.ContainsKey("candidato"))
                 {
                     using(bayerEntities db = new bayerEntities())
                     {
-                        Models.UsuarioModel usuario = JsonConvert.DeserializeObject<Models.UsuarioModel>(jbody["usuario"].ToString());
+                        Models.UsuarioModel usuario = JsonConvert.DeserializeObject<Models.UsuarioModel>(jbody["candidato"].ToString());
 
                         if (db.usuario.Any(i => i.login == usuario.Login) ||db.recrutador.Any(i => i.login == usuario.Login))
                             return BadRequest("Usuário já cadastrado");
@@ -94,7 +98,9 @@ namespace WebApiBayer.Controllers
                                 nome = recrutador.Nome,
                                 sobrenome = recrutador.SobreNome,
                                 email = recrutador.Email,
-                                tel = recrutador.Tel
+                                tel = recrutador.Tel,
+                                registro = recrutador.Registro,
+                                
                                 
                             });
 

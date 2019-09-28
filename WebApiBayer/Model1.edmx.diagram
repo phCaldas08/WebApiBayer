@@ -5,13 +5,13 @@
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
       <Diagram DiagramId="eae803a7aee347f0b435c920a53e5c3a" Name="Diagram1" ZoomLevel="93">
-        <EntityTypeShape EntityType="bayerModel.inscricao" Width="1.5" PointX="5.25" PointY="1.375" IsExpanded="true" />
-        <EntityTypeShape EntityType="bayerModel.recrutador" Width="1.5" PointX="0.75" PointY="1.25" IsExpanded="true" />
-        <EntityTypeShape EntityType="bayerModel.usuario" Width="1.5" PointX="3" PointY="5.5" IsExpanded="true" />
-        <EntityTypeShape EntityType="bayerModel.vagas" Width="1.5" PointX="3" PointY="1" IsExpanded="true" />
-        <AssociationConnector Association="bayerModel.fk_inscricao_usuario" ManuallyRouted="false" />
-        <AssociationConnector Association="bayerModel.fk_inscricao_vaga" ManuallyRouted="false" />
-        <AssociationConnector Association="bayerModel.fk_vaga_recrutador" ManuallyRouted="false" />
+        <EntityTypeShape EntityType="bayerModel.inscricao" Width="1.5" PointX="5.25" PointY="1.375" />
+        <EntityTypeShape EntityType="bayerModel.recrutador" Width="1.5" PointX="0.75" PointY="1" />
+        <EntityTypeShape EntityType="bayerModel.usuario" Width="1.5" PointX="3" PointY="5" />
+        <EntityTypeShape EntityType="bayerModel.vagas" Width="1.5" PointX="3" PointY="1" />
+        <AssociationConnector Association="bayerModel.fk_inscricao_usuario" />
+        <AssociationConnector Association="bayerModel.fk_inscricao_vaga" />
+        <AssociationConnector Association="bayerModel.fk_vaga_recrutador" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>
