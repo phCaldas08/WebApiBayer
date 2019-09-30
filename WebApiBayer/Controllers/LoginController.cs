@@ -49,6 +49,51 @@ namespace WebApiBayer.Controllers
 
         }
 
+        [Route("esqueci_minha_senha")]
+        [HttpPost]
+        public IHttpActionResult PostEsqueciASenha([FromBody] JObject jbody)
+        {
+            try
+            {
+                jbody = JObject.Parse(jbody["usuario"].ToString());
+
+                if (jbody.ContainsKey("data_nascimento") && jbody.ContainsKey("login"))
+                {
+                    using(bayerEntities db = new bayerEntities())
+                    {
+                        DateTime dataNascimento = DateTime.Parse(jbody["data_nascimento"].ToString()).Date;
+                        string login = jbody["login"].ToString();
+
+                        if (db.usuario.Any(i => i.login == login && i.data_nascimento == dataNascimento))
+                        {
+                            usuario usuario = db.usuario.FirstOrDefault(i => i.login == login && i.data_nascimento == dataNascimento);
+
+                            return Ok(Classes.Uteis.Criptografia.Descriptografar(usuario.senha));
+                        }
+                        else if (db.recrutador.Any(i => i.login == login && i.data_nascimento == dataNascimento))
+                        {
+                            recrutador recrutador = db.recrutador.FirstOrDefault(i => i.login == login && i.data_nascimento == dataNascimento);
+
+                            return Ok(Classes.Uteis.Criptografia.Descriptografar(recrutador.senha));
+
+                        }
+                        else
+                           return NotFound();
+
+                    }
+
+                }
+                else
+                    return BadRequest();
+
+            }
+            catch(Exception ex)
+            {
+                return InternalServerError(ex);
+            }
+
+        }
+
         [Route("cadastrar")]
         [HttpPost]
         public IHttpActionResult PostCadastrar([FromBody] JObject jbody) {
@@ -72,7 +117,9 @@ namespace WebApiBayer.Controllers
                                 sobrenome = usuario.SobreNome,
                                 nome = usuario.Nome,
                                 cpf = usuario.CPF,
-                                tel = usuario.Tel
+                                tel = usuario.Tel,
+                                data_nascimento = usuario.DataNascimento
+                                
                             });
 
                             db.SaveChanges();
@@ -100,6 +147,7 @@ namespace WebApiBayer.Controllers
                                 email = recrutador.Email,
                                 tel = recrutador.Tel,
                                 registro = recrutador.Registro,
+                                data_nascimento = recrutador.DataNascimento
                                 
                                 
                             });

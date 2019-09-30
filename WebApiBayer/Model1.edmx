@@ -25,6 +25,7 @@
           <Property Name="login" Type="varchar" MaxLength="100" Nullable="false" />
           <Property Name="senha" Type="varchar" MaxLength="45" Nullable="false" />
           <Property Name="sobrenome" Type="varchar" MaxLength="45" Nullable="false" />
+          <Property Name="data_nascimento" Type="date" Nullable="false" />
         </EntityType>
         <EntityType Name="usuario">
           <Key>
@@ -38,6 +39,7 @@
           <Property Name="cpf" Type="varchar" MaxLength="14" Nullable="false" />
           <Property Name="email" Type="varchar" MaxLength="100" Nullable="false" />
           <Property Name="tel" Type="varchar" MaxLength="45" Nullable="false" />
+          <Property Name="data_nascimento" Type="date" Nullable="false" />
         </EntityType>
         <EntityType Name="vagas">
           <Key>
@@ -150,6 +152,7 @@
           <Property Name="senha" Type="String" Nullable="false" MaxLength="45" FixedLength="false" Unicode="false" />
           <Property Name="sobrenome" Type="String" Nullable="false" MaxLength="45" FixedLength="false" Unicode="false" />
           <NavigationProperty Name="vagas" Relationship="bayerModel.fk_vaga_recrutador" FromRole="recrutador" ToRole="vagas" />
+          <Property Name="data_nascimento" Type="DateTime" Nullable="false" />
         </EntityType>
         <EntityType Name="usuario">
           <Key>
@@ -164,6 +167,7 @@
           <Property Name="email" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
           <Property Name="tel" Type="String" Nullable="false" MaxLength="45" FixedLength="false" Unicode="false" />
           <NavigationProperty Name="inscricao" Relationship="bayerModel.fk_inscricao_usuario" FromRole="usuario" ToRole="inscricao" />
+          <Property Name="data_nascimento" Type="DateTime" Nullable="false" />
         </EntityType>
         <EntityType Name="vagas">
           <Key>
@@ -233,6 +237,7 @@
           <EntitySetMapping Name="recrutador">
             <EntityTypeMapping TypeName="bayerModel.recrutador">
               <MappingFragment StoreEntitySet="recrutador">
+                <ScalarProperty Name="data_nascimento" ColumnName="data_nascimento" />
                 <ScalarProperty Name="sobrenome" ColumnName="sobrenome" />
                 <ScalarProperty Name="senha" ColumnName="senha" />
                 <ScalarProperty Name="login" ColumnName="login" />
@@ -247,6 +252,7 @@
           <EntitySetMapping Name="usuario">
             <EntityTypeMapping TypeName="bayerModel.usuario">
               <MappingFragment StoreEntitySet="usuario">
+                <ScalarProperty Name="data_nascimento" ColumnName="data_nascimento" />
                 <ScalarProperty Name="tel" ColumnName="tel" />
                 <ScalarProperty Name="email" ColumnName="email" />
                 <ScalarProperty Name="cpf" ColumnName="cpf" />

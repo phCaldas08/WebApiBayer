@@ -25,19 +25,20 @@ namespace WebApiBayer.Controllers
         {
             try
             {
-                if (!jbody.ContainsKey("token_candidato")) return BadRequest("Token não identificado!");
+
+                if (!jbody.ContainsKey("id_usuario")) return BadRequest("Usuário não identificado!");
                                
                 BsonDocument document = MongoDB.Bson.Serialization.BsonSerializer.Deserialize<BsonDocument>(jbody["curriculo"].ToString());
 
                 IMongoDatabase db = Classes.Mongo.GetDatabase("teste_bayer");
 
-                if (db.GetCollection<BsonDocument>("curriculo").CountDocuments(i => i["candidato"]["id_candidato"] == document["candidato"]["id_candidato"]) == 0)
+                if (db.GetCollection<BsonDocument>("curriculo").CountDocuments(i => i["candidato"]["id_candidato"] == document["candidato"]["id_candidato"]) > 0)
                 {
-                    db.GetCollection<BsonDocument>("curriculo").InsertOne(document);
-                    return Ok("Candidato cadastrado com sucesso!");
+                    db.GetCollection<BsonDocument>("curriculo").DeleteOne(i => i["candidato"]["id_candidato"] == document["candidato"]["id_candidato"]);
                 }
-                else
-                    return BadRequest("Candidato já cadastrado para o processo seletivo");
+                
+                db.GetCollection<BsonDocument>("curriculo").InsertOne(document);
+                return Ok("Candidato cadastrado com sucesso!");
             }
             catch(Exception ex)
             {

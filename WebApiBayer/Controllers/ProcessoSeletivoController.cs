@@ -26,19 +26,27 @@ namespace WebApiBayer.Controllers
         {
             try
             {
+                using (bayerEntities db = new bayerEntities())
+                {
+                    if (!jbody.ContainsKey("id_vaga") || !db.vagas.ToList().Any(i => i.ToString() == jbody["id_vaga"].ToString())) return NotFound();
 
-                return Ok();
+                    BsonDocument document = MongoDB.Bson.Serialization.BsonSerializer.Deserialize<BsonDocument>(jbody["vaga"].ToString());
 
-                return Unauthorized();
+                    IMongoDatabase dbMongo = Classes.Mongo.GetDatabase("teste_bayer");
+
+                    if (dbMongo.GetCollection<BsonDocument>("processo_seletivo").CountDocuments(i => i["id_vaga"] == document["id_vaga"]) == 0)
+                    {
+                        dbMongo.GetCollection<BsonDocument>("processo_seletivo").InsertOne(document);
+                        return Ok("Processo seletivo cadastrado com sucesso!");
+                    }
+                    else
+                        return BadRequest("Vaga já cadastrada!");
+                }
             }
-            catch(BayerException bex)
+            catch (Exception ex)
             {
-                return InternalServerError(bex);
+                return InternalServerError(ex);
             }
-            catch(Exception ex)
-            {
-                return InternalServerError(new Exception("Erro ao cadastrar novo processo seletivo."));
-            }            
         }
 
         /// <summary>
@@ -54,8 +62,6 @@ namespace WebApiBayer.Controllers
             {
 
                 return Ok();
-
-                return Unauthorized();
             }
             catch (BayerException bex)
             {
@@ -79,7 +85,28 @@ namespace WebApiBayer.Controllers
         {
             try
             {
-               IMongoDatabase db = Classes.Mongo.GetDatabase("teste_bayer");                
+                using (bayerEntities db = new bayerEntities())
+                {
+                    IMongoDatabase dbMongo = Classes.Mongo.GetDatabase("teste_bayer");
+
+                    List<string> ids_vagas = db.vagas.ToList().Where(i => i.data_criacao.AddDays(i.duracao) <= DateTime.Today).Select(i => i.id_vaga.ToString()).ToList();
+
+                    if (dbMongo.GetCollection<BsonDocument>("processo_seletivo").CountDocuments(i => ids_vagas.Contains(i["id_vaga"].ToString())) > 0)
+                    {
+                        List<BsonDocument> listbson = dbMongo.GetCollection<BsonDocument>("processo_seletivo")
+                            .Find(i => ids_vagas.Contains(i["id_vaga"].ToString()))
+                            .Project(Builders<BsonDocument>.Projection.Exclude("_id")).ToList();
+
+                        string jsonstr = "{ [";
+
+                        //Formatar json com todos os processos seletivos do banco
+                        foreach(BsonDocument bson in listbson)
+                            jsonstr += bson.ToJson<MongoDB.Bson.BsonDocument>() + (listbson.Last() == bson ? "] }" : ",");
+
+
+                        return Json(JObject.Parse(jsonstr));
+                    }
+                }
 
                 return Unauthorized();
             }
@@ -117,9 +144,7 @@ namespace WebApiBayer.Controllers
                 }
                 else
                     return NotFound();
-                
 
-                return Unauthorized();
             }
             catch(Classes.Uteis.BayerException bex)
             {

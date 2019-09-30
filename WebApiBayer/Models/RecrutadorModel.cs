@@ -14,6 +14,7 @@ namespace WebApiBayer.Models
         public string Login { get; set; }
         public string Senha { get; set; }
         public string SobreNome { get; set; }
+        public DateTime DataNascimento { get; set; }
 
     }
 }

@@ -28,6 +28,7 @@ namespace WebApiBayer
         public string cpf { get; set; }
         public string email { get; set; }
         public string tel { get; set; }
+        public System.DateTime data_nascimento { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<inscricao> inscricao { get; set; }

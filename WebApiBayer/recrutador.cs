@@ -28,6 +28,7 @@ namespace WebApiBayer
         public string login { get; set; }
         public string senha { get; set; }
         public string sobrenome { get; set; }
+        public System.DateTime data_nascimento { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<vagas> vagas { get; set; }
